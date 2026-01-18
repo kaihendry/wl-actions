@@ -329,15 +329,24 @@ impl WlPointerHandler for CountingPointerHandler {
                 let mut pressed = self.pressed_buttons.lock().unwrap();
                 // Only count if this button wasn't already pressed
                 let was_new = pressed.insert(button);
-                eprintln!("[DEBUG] Handler #{}: Button {} pressed, was_new={}, count now={}",
-                    self.handler_id, button, was_new, self.counters.button_clicks.load(Ordering::Relaxed) + if was_new { 1 } else { 0 });
+                eprintln!(
+                    "[DEBUG] Handler #{}: Button {} pressed, was_new={}, count now={}",
+                    self.handler_id,
+                    button,
+                    was_new,
+                    self.counters.button_clicks.load(Ordering::Relaxed)
+                        + if was_new { 1 } else { 0 }
+                );
                 if was_new {
                     self.counters.button_clicks.fetch_add(1, Ordering::Relaxed);
                 }
             }
             WlPointerButtonState::RELEASED => {
                 let mut pressed = self.pressed_buttons.lock().unwrap();
-                eprintln!("[DEBUG] Handler #{}: Button {} released", self.handler_id, button);
+                eprintln!(
+                    "[DEBUG] Handler #{}: Button {} released",
+                    self.handler_id, button
+                );
                 pressed.remove(&button);
             }
             _ => {}
@@ -347,18 +356,29 @@ impl WlPointerHandler for CountingPointerHandler {
 
     fn handle_axis(&mut self, slf: &Rc<WlPointer>, time: u32, axis: WlPointerAxis, value: Fixed) {
         // Basic axis events for scrolling - throttle to avoid counting every micro-event
-        if matches!(axis, WlPointerAxis::VERTICAL_SCROLL | WlPointerAxis::HORIZONTAL_SCROLL) {
+        if matches!(
+            axis,
+            WlPointerAxis::VERTICAL_SCROLL | WlPointerAxis::HORIZONTAL_SCROLL
+        ) {
             let mut last_time = self.last_scroll_time.lock().unwrap();
             let now = Instant::now();
             let elapsed = now.duration_since(*last_time);
 
             // Only count if at least 100ms has passed since last scroll (debounce)
             if elapsed >= Duration::from_millis(100) {
-                eprintln!("[DEBUG] Handler #{}: Axis scroll event (value={}, counted)", self.handler_id, value.to_f64());
+                eprintln!(
+                    "[DEBUG] Handler #{}: Axis scroll event (value={}, counted)",
+                    self.handler_id,
+                    value.to_f64()
+                );
                 self.counters.scroll_steps.fetch_add(1, Ordering::Relaxed);
                 *last_time = now;
             } else {
-                eprintln!("[DEBUG] Handler #{}: Axis scroll event (value={}, ignored - too soon)", self.handler_id, value.to_f64());
+                eprintln!(
+                    "[DEBUG] Handler #{}: Axis scroll event (value={}, ignored - too soon)",
+                    self.handler_id,
+                    value.to_f64()
+                );
             }
         }
         slf.send_axis(time, axis, value);
@@ -371,11 +391,17 @@ impl WlPointerHandler for CountingPointerHandler {
         let elapsed = now.duration_since(*last_time);
 
         if elapsed >= Duration::from_millis(100) {
-            eprintln!("[DEBUG] Handler #{}: Discrete scroll (discrete={}, counted)", self.handler_id, discrete);
+            eprintln!(
+                "[DEBUG] Handler #{}: Discrete scroll (discrete={}, counted)",
+                self.handler_id, discrete
+            );
             self.counters.scroll_steps.fetch_add(1, Ordering::Relaxed);
             *last_time = now;
         } else {
-            eprintln!("[DEBUG] Handler #{}: Discrete scroll (discrete={}, ignored - too soon)", self.handler_id, discrete);
+            eprintln!(
+                "[DEBUG] Handler #{}: Discrete scroll (discrete={}, ignored - too soon)",
+                self.handler_id, discrete
+            );
         }
         slf.send_axis_discrete(axis, discrete);
     }
@@ -387,11 +413,17 @@ impl WlPointerHandler for CountingPointerHandler {
         let elapsed = now.duration_since(*last_time);
 
         if elapsed >= Duration::from_millis(100) {
-            eprintln!("[DEBUG] Handler #{}: Value120 scroll (value120={}, counted)", self.handler_id, value120);
+            eprintln!(
+                "[DEBUG] Handler #{}: Value120 scroll (value120={}, counted)",
+                self.handler_id, value120
+            );
             self.counters.scroll_steps.fetch_add(1, Ordering::Relaxed);
             *last_time = now;
         } else {
-            eprintln!("[DEBUG] Handler #{}: Value120 scroll (value120={}, ignored - too soon)", self.handler_id, value120);
+            eprintln!(
+                "[DEBUG] Handler #{}: Value120 scroll (value120={}, ignored - too soon)",
+                self.handler_id, value120
+            );
         }
         slf.send_axis_value120(axis, value120);
     }
