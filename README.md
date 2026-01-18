@@ -18,16 +18,18 @@ Press **Ctrl+C** to stop and see the summary.
 
 | Event Type | Wayland Event | What Counts |
 |------------|---------------|-------------|
-| Key press | `wl_keyboard::key` | Only `PRESSED` state (ignores release and repeat) |
-| Mouse click | `wl_pointer::button` | Only `PRESSED` state |
-| Scroll | `wl_pointer::axis_discrete` / `axis_value120` | Each discrete scroll step |
+| Key press | `wl_keyboard::key` | Only `PRESSED` state (ignores release, repeat, and duplicate events) |
+| Mouse click | `wl_pointer::button` | Only `PRESSED` state (ignores release and duplicate events) |
+| Scroll | `wl_pointer::axis*` | Throttled to one count per 100ms (tracked separately from total) |
 | Touch | `wl_touch::down` | Each touch start |
+
+**Note:** The total only counts keys and clicks, as scroll events are too granular to meaningfully include.
 
 ## Output
 
 Live display (updated every 100ms):
 ```
-Keys: 42 | Clicks: 15 | Scrolls: 8 | Touch: 3 | Total: 68
+Keys: 42 | Clicks: 15 | Scrolls: 8 | Touch: 3 | Total: 57 (keys+clicks)
 ```
 
 Summary on exit:
@@ -36,10 +38,10 @@ Summary on exit:
 Duration: 2m 34s
 Key presses: 42
 Button clicks: 15
-Scroll steps: 8
+Scroll steps: 8 (tracked separately)
 Touch taps: 3
-Total actions: 68
-Actions per minute: 26.5
+Total actions: 57 (keys + clicks)
+Actions per minute: 22.3
 ```
 
 ## Building

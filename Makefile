@@ -1,6 +1,6 @@
 .PHONY: all build release install clean test check
 
-BIN = target/release/wl-actions
+BIN = ../../target/release/wl-actions
 PREFIX ?= $(HOME)/.local
 
 all: release
