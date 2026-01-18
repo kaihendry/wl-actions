@@ -194,12 +194,12 @@ impl WlRegistryHandler for WlRegistryHandlerImpl {
 
     fn handle_bind(&mut self, slf: &Rc<WlRegistry>, name: u32, object: Rc<dyn Object>) {
         // Set counting handlers for wl_seat
-        if object.core().interface() == ObjectInterface::WlSeat {
-            if let Ok(seat) = (object.clone() as Rc<dyn Any>).downcast::<WlSeat>() {
-                seat.set_handler(CountingSeatHandler {
-                    counters: self.counters.clone(),
-                });
-            }
+        if object.core().interface() == ObjectInterface::WlSeat
+            && let Ok(seat) = (object.clone() as Rc<dyn Any>).downcast::<WlSeat>()
+        {
+            seat.set_handler(CountingSeatHandler {
+                counters: self.counters.clone(),
+            });
         }
         slf.send_bind(name, object);
     }
