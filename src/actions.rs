@@ -192,12 +192,7 @@ impl WlRegistryHandler for WlRegistryHandlerImpl {
         slf.send_global_remove(name);
     }
 
-    fn handle_bind(
-        &mut self,
-        slf: &Rc<WlRegistry>,
-        name: u32,
-        object: Rc<dyn Object>,
-    ) {
+    fn handle_bind(&mut self, slf: &Rc<WlRegistry>, name: u32, object: Rc<dyn Object>) {
         // Set counting handlers for wl_seat
         if object.core().interface() == ObjectInterface::WlSeat {
             if let Ok(seat) = (object.clone() as Rc<dyn Any>).downcast::<WlSeat>() {
@@ -283,12 +278,7 @@ impl WlPointerHandler for CountingPointerHandler {
         slf.send_button(serial, time, button, state);
     }
 
-    fn handle_axis_discrete(
-        &mut self,
-        slf: &Rc<WlPointer>,
-        axis: WlPointerAxis,
-        discrete: i32,
-    ) {
+    fn handle_axis_discrete(&mut self, slf: &Rc<WlPointer>, axis: WlPointerAxis, discrete: i32) {
         // Each discrete step counts as a scroll action
         self.counters
             .scroll_steps
@@ -296,12 +286,7 @@ impl WlPointerHandler for CountingPointerHandler {
         slf.send_axis_discrete(axis, discrete);
     }
 
-    fn handle_axis_value120(
-        &mut self,
-        slf: &Rc<WlPointer>,
-        axis: WlPointerAxis,
-        value120: i32,
-    ) {
+    fn handle_axis_value120(&mut self, slf: &Rc<WlPointer>, axis: WlPointerAxis, value120: i32) {
         // Accumulate high-resolution scroll values
         // Each 120 units = 1 logical scroll step
         let accumulator = match axis {
