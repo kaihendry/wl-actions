@@ -6,11 +6,11 @@ fn main() {
         .output()
         .ok();
 
-    if let Some(output) = output {
-        if output.status.success() {
-            let git_hash = String::from_utf8_lossy(&output.stdout);
-            println!("cargo:rustc-env=GIT_HASH={}", git_hash.trim());
-        }
+    if let Some(output) = output
+        && output.status.success()
+    {
+        let git_hash = String::from_utf8_lossy(&output.stdout);
+        println!("cargo:rustc-env=GIT_HASH={}", git_hash.trim());
     }
 
     println!("cargo:rerun-if-changed=.git/HEAD");
