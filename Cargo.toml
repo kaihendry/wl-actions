@@ -2,9 +2,12 @@
 name = "wl-actions"
 version = "0.1.0"
 edition = "2024"
+description = "Count input actions (keys, clicks, scrolls, touch) for Wayland applications"
+repository = "https://github.com/kaihendry/wl-actions"
+license = "MIT"
 
 [dependencies]
-wl-proxy = { path = "../../wl-proxy", features = ["all-protocols"] }
+wl-proxy = { git = "https://github.com/mahkoh/wl-proxy", features = ["all-protocols"] }
 clap = { version = "4.5", features = ["derive"] }
 clap_complete = "4.5"
 thiserror = "2.0"

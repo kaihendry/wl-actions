@@ -40,12 +40,34 @@ Total actions: 68
 Actions per minute: 26.5
 ```
 
-## Installation
+## Building
 
-Requires [wl-proxy](https://github.com/mahkoh/wl-proxy) as a dependency.
+### Prerequisites
+
+- Rust 1.85+ (uses edition 2024)
+- Linux with Wayland
+
+### From source
 
 ```bash
-cargo build --release -p wl-actions
+# Clone the repository
+git clone https://github.com/kaihendry/wl-actions.git
+cd wl-actions
+
+# Build release binary
+make
+
+# Or using cargo directly
+cargo build --release
+
+# Install to ~/.cargo/bin
+make install
+```
+
+### Using cargo install
+
+```bash
+cargo install --git https://github.com/kaihendry/wl-actions
 ```
 
 ## Options
@@ -62,12 +84,25 @@ Options:
   -h, --help                         Print help
 ```
 
+## Shell completions
+
+```bash
+# Bash
+wl-actions --generate-completion bash > ~/.local/share/bash-completion/completions/wl-actions
+
+# Zsh
+wl-actions --generate-completion zsh > ~/.zfunc/_wl-actions
+
+# Fish
+wl-actions --generate-completion fish > ~/.config/fish/completions/wl-actions.fish
+```
+
 ## How it works
 
-wl-actions wraps a Wayland application by creating a proxy between the app and the compositor. It intercepts input events, counts them, and forwards them to the application unchanged.
+wl-actions wraps a Wayland application by creating a proxy between the app and the compositor using [wl-proxy](https://github.com/mahkoh/wl-proxy). It intercepts input events, counts them, and forwards them to the application unchanged.
 
 Note: You need to close any existing instance of an application before wrapping it (e.g., Chrome uses a single-process model).
 
 ## License
 
-Same as wl-proxy.
+MIT
