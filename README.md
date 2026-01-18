@@ -1,5 +1,7 @@
 # wl-actions
 
+[![wl-actions demo](https://img.youtube.com/vi/hn-cUjbaGIg/maxresdefault.jpg)](https://youtu.be/hn-cUjbaGIg)
+
 A CLI tool that counts keyboard presses, mouse clicks, scroll events, and touch interactions to measure "actions" required for a task on Wayland.
 
 ## Usage
